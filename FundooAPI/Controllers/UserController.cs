@@ -23,6 +23,8 @@ namespace FundooAPI.Controllers
         public IActionResult InsertuserData([FromBody] UserRequestModel User) 
         {
             string token = Guid.NewGuid().ToString();
+            //yeh token hum verifyurl ke saath isiliyea bhej rahe hai ki jab user verify karega
+            //to yehi token mere EmailVerification api me aayega phir aage ka process hoga.
             string verifyUrl = $"{Request.Scheme}://{Request.Host}/api/User/EmailVerification?token={token}";
             var response = userBusinessLayer.InsertuserData(User,token,verifyUrl);
             return Ok(response);
