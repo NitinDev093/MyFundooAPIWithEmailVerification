@@ -12,5 +12,7 @@ namespace BusinessLayer.IBusinesslayer
     {
         ApiResponseModel<string> InsertuserData(UserRequestModel user,string token ,string verifyUrl);
         ApiResponseModel<string> EmailVerification(string token);
+        ApiResponseModel<string> UserLogin(string email,string password);
+        ApiResponseModel<string> CheckEmailExistance(string email,string resetToken,string resetUrl);
     }
 }

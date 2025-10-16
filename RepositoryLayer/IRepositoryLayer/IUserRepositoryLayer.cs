@@ -12,5 +12,7 @@ namespace RepositoryLayer.IRepositoryLayer
     {
         int InsertuserData(UserRequestModel User,string token);
         DataTable EmailVerificationr(string token);
+        DataTable UserLogin(string email,string password);
+        bool CheckEmailExistance(string email,string resetToken);
     }
 }

@@ -45,7 +45,7 @@ namespace UtilityLayer
                 Console.WriteLine("Error while sending email: " + ex.Message);
             }
         }
-        public string emailbodyTemplate(string name,string url)
+        public string emailbodyTemplate(string name, string url)
         {
             return $@"
 
@@ -135,6 +135,12 @@ namespace UtilityLayer
     </html>";
         }
 
+        public string resetPasswordTemplates(string resetUrl)
+        {
+            return $@"
+
+            ";
+        }
     }
 }
 

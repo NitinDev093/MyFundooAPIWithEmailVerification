@@ -19,6 +19,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IUserRepositoryLayer, UserRepositoryLayer>();
 builder.Services.AddScoped<IUserBusinessLayer, UserBusinessLayer>();
 builder.Services.AddSingleton<EmailHelper>();
+builder.Services.AddSingleton<JwtHelper>();
 
 //My Activatity End===========================
 

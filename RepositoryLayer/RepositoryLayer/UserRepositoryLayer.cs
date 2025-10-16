@@ -55,5 +55,33 @@ namespace RepositoryLayer.RepositoryLayer
             }
         }
 
+        public DataTable UserLogin(string email, string password)
+        {
+            using (SqlConnection sqlcon = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("usp_loginUser", sqlcon);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Email", email);
+                cmd.Parameters.AddWithValue("@Password", password);
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                sda.Fill(dt);
+                return dt;
+            }
+        }
+
+        public bool CheckEmailExistance(string email, string resetToken)
+        {
+            using (SqlConnection sqlcon = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("usp_resetpasswordToken", sqlcon);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Email", email);
+                cmd.Parameters.AddWithValue("@resetToken", resetToken);
+                sqlcon.Open();
+                int rowsAffected = cmd.ExecuteNonQuery();
+                return Convert.ToBoolean(rowsAffected);
+            }
+        }
     }
 }

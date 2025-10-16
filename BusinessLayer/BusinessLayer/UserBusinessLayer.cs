@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.IBusinesslayer;
 using CommonLayer.RequestModel;
 using CommonLayer.ResponseModel;
+using Newtonsoft.Json;
 using RepositoryLayer.IRepositoryLayer;
 using System;
 using System.Collections.Generic;
@@ -19,10 +20,12 @@ namespace BusinessLayer.BusinessLayer
     {
         private readonly IUserRepositoryLayer userRepositoryLayer;
         private readonly EmailHelper _emailHelper;
-        public UserBusinessLayer(EmailHelper emailHelper, IUserRepositoryLayer _userRepositoryLayer)
+        private readonly JwtHelper _jwtHelper;
+        public UserBusinessLayer(EmailHelper emailHelper,JwtHelper jwtHelper, IUserRepositoryLayer _userRepositoryLayer)
         {
             userRepositoryLayer= _userRepositoryLayer;
             _emailHelper= emailHelper;
+            _jwtHelper= jwtHelper;
         }
 
         
@@ -37,7 +40,7 @@ namespace BusinessLayer.BusinessLayer
                 string body = _emailHelper.emailbodyTemplate(user.firstName, verifyUrl);
                 _emailHelper.SendEmail(user.emailAddress, subject, body);
                 response.isSuccess = true;
-                response.message = "Registration SuccessFull";
+                response.message = "Registration SuccessFull!Please verfiy ypur account through email ";
             }
             else
             {
@@ -80,6 +83,45 @@ namespace BusinessLayer.BusinessLayer
             return response;
         }
 
+        public ApiResponseModel<string> UserLogin(string email, string password)
+        {
+            ApiResponseModel<string> response=new ApiResponseModel<string>();
+            password= EncodeDecodeHelper.EncodeDataToBase64(password);
+            DataTable userData = userRepositoryLayer.UserLogin(email, password);
+            if (userData.Rows.Count>0)
+            {
+                string token = _jwtHelper.GenerateToken(userData);
+                response.isSuccess = true;
+                response.message = "Login Successfull";
+                response.Data = token;
+            }
+            else
+            {
+                response.isSuccess = false;
+                response.message = "Invalid credentials";
+                response.Data = null;
+            }
+            return response;
+        }
 
+        public ApiResponseModel<string> CheckEmailExistance(string email, string resetToken, string resetUrl)
+        {
+            ApiResponseModel<string> response=new ApiResponseModel<string>();
+            bool isSuccess = userRepositoryLayer.CheckEmailExistance(email, resetToken);
+            if (isSuccess)
+            {
+                string subject = "Reset your password";
+                string body = _emailHelper.emailbodyTemplate("User", resetUrl);
+                _emailHelper.SendEmail(email, subject, body);
+                response.isSuccess = true;
+                response.message = "Please check your email to reset your password";
+            }
+            else
+            {
+                response.isSuccess = false;
+                response.message = "Invalid Email!Please enter a valid email that you use during signup?";
+            }
+            return response;
+        }
     }
 }
