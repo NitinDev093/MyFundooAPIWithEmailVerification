@@ -19,7 +19,7 @@ namespace FundooAPI.Controllers
             userBusinessLayer = _userBusinessLayer;
         }
 
-        [Route("Adduser")]
+        [Route("userRegistration")]
         [HttpPost]
         public IActionResult InsertuserData([FromBody] UserRequestModel User) 
         {
@@ -46,20 +46,30 @@ namespace FundooAPI.Controllers
             return Ok(response);
         }
 
-        [Route("CheckEmailExistance")]//In case of reset password or forgot password
+        [Route("CheckEmailExistance")]
         [HttpPost]
         public IActionResult CheckEmailExistance(string email)
         {
-            string resetToken = Guid.NewGuid().ToString();
-            string resetUrl = $"{Request.Scheme}://{Request.Host}/api/User/ResetPassword?token={resetToken}";
-            var response = userBusinessLayer.CheckEmailExistance(email,resetToken,resetUrl);
+            var response = userBusinessLayer.CheckEmailExistance(email);
             return Ok(response);
         }
 
-        //public IActionResult ResetPassword(string resetToken)
-        //{
-        //    return Ok("sefsdgdfbdfb");
-        //}
+
+        [Route("ForgotPassword")]
+        [HttpGet]
+        public IActionResult ForgotPassword(string email)
+        {
+            var response = userBusinessLayer.ForgotPassword(email);
+            return Ok(response);
+        }
+
+        [Route("ResetPassword")]
+        [HttpGet]
+        public IActionResult ResetPassword(string newPassword)
+        {
+            var response = userBusinessLayer.ResetPassword(newPassword);
+            return Ok(response);
+        }
 
 
 

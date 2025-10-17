@@ -135,7 +135,7 @@ namespace UtilityLayer
     </html>";
         }
 
-        public string resetPasswordTemplates(string resetUrl)
+        public string resetPasswordTemplates(string resetUrl)//this body will work for reset and forgot password
         {
             return $@"
 

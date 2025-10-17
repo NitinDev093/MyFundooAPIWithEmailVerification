@@ -1,13 +1,9 @@
 ﻿using CommonLayer.RequestModel;
 using Microsoft.Extensions.Configuration;
 using RepositoryLayer.IRepositoryLayer;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace RepositoryLayer.RepositoryLayer
 {
@@ -70,17 +66,31 @@ namespace RepositoryLayer.RepositoryLayer
             }
         }
 
-        public bool CheckEmailExistance(string email, string resetToken)
+        public DataTable CheckEmailExistance(string email)
         {
             using (SqlConnection sqlcon = new SqlConnection(connectionString))
             {
-                SqlCommand cmd = new SqlCommand("usp_resetpasswordToken", sqlcon);
+                SqlCommand cmd = new SqlCommand("usp_checkemailExistance", sqlcon);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Email", email);
-                cmd.Parameters.AddWithValue("@resetToken", resetToken);
-                sqlcon.Open();
-                int rowsAffected = cmd.ExecuteNonQuery();
-                return Convert.ToBoolean(rowsAffected);
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                sda.Fill(dt);
+                return dt;
+            }
+        }
+
+        public DataTable GetUserByEmailAddress(string email)
+        {
+            using (SqlConnection sqlcon = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("usp_GetUserByEmailAddress", sqlcon);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Email", email);
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                sda.Fill(dt);
+                return dt;
             }
         }
     }

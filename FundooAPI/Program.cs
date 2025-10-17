@@ -20,7 +20,16 @@ builder.Services.AddScoped<IUserRepositoryLayer, UserRepositoryLayer>();
 builder.Services.AddScoped<IUserBusinessLayer, UserBusinessLayer>();
 builder.Services.AddSingleton<EmailHelper>();
 builder.Services.AddSingleton<JwtHelper>();
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins", builder =>
+    {
+        builder
+            .WithOrigins("http://localhost:4200")   // ya specific origin: .WithOrigins("https://example.com")
+            .AllowAnyMethod()   // GET, POST, PUT, DELETE, etc.
+            .AllowAnyHeader();  // allow headers
+    });
+});
 //My Activatity End===========================
 
 
@@ -34,6 +43,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowAllOrigins");
 
 app.UseAuthorization();
 

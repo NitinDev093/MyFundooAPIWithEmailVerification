@@ -2,11 +2,13 @@
 using CommonLayer.RequestModel;
 using CommonLayer.ResponseModel;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RepositoryLayer.IRepositoryLayer;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -18,12 +20,12 @@ namespace BusinessLayer.BusinessLayer
 {
     public class UserBusinessLayer : IUserBusinessLayer
     {
-        private readonly IUserRepositoryLayer userRepositoryLayer;
+        private readonly IUserRepositoryLayer _userRepositoryLayer;
         private readonly EmailHelper _emailHelper;
         private readonly JwtHelper _jwtHelper;
-        public UserBusinessLayer(EmailHelper emailHelper,JwtHelper jwtHelper, IUserRepositoryLayer _userRepositoryLayer)
+        public UserBusinessLayer(EmailHelper emailHelper,JwtHelper jwtHelper, IUserRepositoryLayer userRepositoryLayer)
         {
-            userRepositoryLayer= _userRepositoryLayer;
+            _userRepositoryLayer= userRepositoryLayer;
             _emailHelper= emailHelper;
             _jwtHelper= jwtHelper;
         }
@@ -33,7 +35,7 @@ namespace BusinessLayer.BusinessLayer
         {
             ApiResponseModel<string> response= new ApiResponseModel<string>();
             user.password= EncodeDecodeHelper.EncodeDataToBase64(user.password);
-            int userId=userRepositoryLayer.InsertuserData(user,token);
+            int userId=_userRepositoryLayer.InsertuserData(user,token);
             if (userId>0)
             {
                 string subject = "Verify your email";
@@ -57,7 +59,7 @@ namespace BusinessLayer.BusinessLayer
                 response.isSuccess = false;
                 response.message = "Invalid token";
             }
-            DataTable userData = userRepositoryLayer.EmailVerificationr(token);
+            DataTable userData = _userRepositoryLayer.EmailVerificationr(token);
             if (userData.Rows.Count>0)
             {
                 string email = userData.Rows[0]["Email"].ToString();
@@ -87,7 +89,7 @@ namespace BusinessLayer.BusinessLayer
         {
             ApiResponseModel<string> response=new ApiResponseModel<string>();
             password= EncodeDecodeHelper.EncodeDataToBase64(password);
-            DataTable userData = userRepositoryLayer.UserLogin(email, password);
+            DataTable userData = _userRepositoryLayer.UserLogin(email, password);
             if (userData.Rows.Count>0)
             {
                 string token = _jwtHelper.GenerateToken(userData);
@@ -104,22 +106,48 @@ namespace BusinessLayer.BusinessLayer
             return response;
         }
 
-        public ApiResponseModel<string> CheckEmailExistance(string email, string resetToken, string resetUrl)
+        public ApiResponseModel<bool> CheckEmailExistance(string email)
+        {
+            ApiResponseModel<bool> response=new ApiResponseModel<bool>();
+            DataTable status = _userRepositoryLayer.CheckEmailExistance(email);
+            if (status.Rows.Count>0)
+            {
+                bool isSuccess = Convert.ToBoolean(status.Rows[0]["isExists"]);
+                response.isSuccess = true;
+                response.Data = isSuccess;
+                response.message = "";
+            }
+            return response;
+        }
+
+        public ApiResponseModel<string> ForgotPassword(string email)
         {
             ApiResponseModel<string> response=new ApiResponseModel<string>();
-            bool isSuccess = userRepositoryLayer.CheckEmailExistance(email, resetToken);
-            if (isSuccess)
+            DataTable datatable = _userRepositoryLayer.CheckEmailExistance(email);
+            if (datatable.Rows.Count > 0 && Convert.ToBoolean(datatable.Rows[0]["isExists"]))
             {
-                string subject = "Reset your password";
-                string body = _emailHelper.emailbodyTemplate("User", resetUrl);
-                _emailHelper.SendEmail(email, subject, body);
-                response.isSuccess = true;
-                response.message = "Please check your email to reset your password";
+                DataTable UserData = _userRepositoryLayer.GetUserByEmailAddress(email);
+                string token = _jwtHelper.GenerateToken(UserData, 30);
+                string verifyUrl = $"http://localhost:4200/reset-password/{token}";
+                string subject = "Reset Your Password";
+                string body = $"Click on the given link to reset your password: <a href='{verifyUrl}'>Reset Password</a>";
+                try
+                {
+                    _emailHelper.SendEmail(email, subject, body);
+                    response.isSuccess = true;
+                    response.message = "Your reset password link has been sent over the email. The reset password link will be valid till 30 minutes only.";
+                }
+                catch (Exception)
+                {
+
+                    response.isSuccess = false;
+                    response.message = "Internal Server Error Please try again.";
+                }
             }
             else
             {
-                response.isSuccess = false;
-                response.message = "Invalid Email!Please enter a valid email that you use during signup?";
+                response.isSuccess= false;
+                response.message = "You entered invalid email.";
             }
             return response;
         }
