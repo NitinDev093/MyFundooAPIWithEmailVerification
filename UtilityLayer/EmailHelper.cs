@@ -42,7 +42,7 @@ namespace UtilityLayer
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error while sending email: " + ex.Message);
+                throw ex;
             }
         }
         public string emailbodyTemplate(string name, string url)

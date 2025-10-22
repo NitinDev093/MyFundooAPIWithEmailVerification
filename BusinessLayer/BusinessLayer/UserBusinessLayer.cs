@@ -139,7 +139,6 @@ namespace BusinessLayer.BusinessLayer
                 }
                 catch (Exception)
                 {
-
                     response.isSuccess = false;
                     response.message = "Internal Server Error Please try again.";
                 }
@@ -148,6 +147,24 @@ namespace BusinessLayer.BusinessLayer
             {
                 response.isSuccess= false;
                 response.message = "You entered invalid email.";
+            }
+            return response;
+        }
+
+        public ApiResponseModel<string> ResetPassword(string newPassword)
+        {
+            ApiResponseModel<string> response=new ApiResponseModel<string>();
+            newPassword= EncodeDecodeHelper.EncodeDataToBase64(newPassword);
+            bool updatedPassword = _userRepositoryLayer.ResetPassword(newPassword);
+            if (updatedPassword)
+            {
+                response.isSuccess = true;
+                response.message = "Password reset successful";
+            }
+            else
+            {
+                response.isSuccess = false;
+                response.message = "Unable to reset password";
             }
             return response;
         }

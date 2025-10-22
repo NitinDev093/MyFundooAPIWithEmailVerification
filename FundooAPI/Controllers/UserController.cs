@@ -54,9 +54,8 @@ namespace FundooAPI.Controllers
             return Ok(response);
         }
 
-
         [Route("ForgotPassword")]
-        [HttpGet]
+        [HttpPost]
         public IActionResult ForgotPassword(string email)
         {
             var response = userBusinessLayer.ForgotPassword(email);
@@ -64,15 +63,12 @@ namespace FundooAPI.Controllers
         }
 
         [Route("ResetPassword")]
-        [HttpGet]
-        public IActionResult ResetPassword(string newPassword)
+        [HttpPost]
+        public IActionResult ResetPassword(string password)
         {
-            var response = userBusinessLayer.ResetPassword(newPassword);
+            var response = userBusinessLayer.ResetPassword(password);
             return Ok(response);
         }
-
-
-
 
     }
 }

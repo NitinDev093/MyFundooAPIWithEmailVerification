@@ -15,5 +15,6 @@ namespace BusinessLayer.IBusinesslayer
         ApiResponseModel<string> UserLogin(string email,string password);
         ApiResponseModel<bool> CheckEmailExistance(string email);
         ApiResponseModel<string> ForgotPassword(string email);
+        ApiResponseModel<string> ResetPassword(string newPassword);
     }
 }

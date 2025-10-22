@@ -18,6 +18,8 @@ builder.Services.AddSwaggerGen();
 //My Activatity Start=========================
 builder.Services.AddScoped<IUserRepositoryLayer, UserRepositoryLayer>();
 builder.Services.AddScoped<IUserBusinessLayer, UserBusinessLayer>();
+builder.Services.AddScoped<INotesRepositoryLayer, NotesRepositoryLayer>();
+builder.Services.AddScoped<INotesBusinsessLayer, NotesBusinessLayer>();
 builder.Services.AddSingleton<EmailHelper>();
 builder.Services.AddSingleton<JwtHelper>();
 builder.Services.AddCors(options =>

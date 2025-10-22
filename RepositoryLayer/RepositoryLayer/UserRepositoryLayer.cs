@@ -93,5 +93,18 @@ namespace RepositoryLayer.RepositoryLayer
                 return dt;
             }
         }
+
+        public bool ResetPassword(string newPassword)
+        {
+            using (SqlConnection sqlcon = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("usp_ResetPassword", sqlcon);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@NewPassword", newPassword);
+                sqlcon.Open();
+                int result = cmd.ExecuteNonQuery();
+                return Convert.ToBoolean(result);
+            }
+        }
     }
 }

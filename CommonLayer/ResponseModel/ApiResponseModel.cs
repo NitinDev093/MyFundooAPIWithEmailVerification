@@ -18,5 +18,9 @@ namespace CommonLayer.ResponseModel
         public int userId { get; set; }
         public bool isActive { get; set; }
     }
-    
+    public class NotesResponseModel : NotesRequestModel
+    {
+        public int NoteId { get; set; }
+        public string CreatedAt { get; set; }
+    }
 }
