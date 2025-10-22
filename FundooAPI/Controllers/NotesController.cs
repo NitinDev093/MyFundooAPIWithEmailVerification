@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.IBusinesslayer;
 using CommonLayer.RequestModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FundooAPI.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class NotesController : ControllerBase
     {
@@ -23,5 +25,14 @@ namespace FundooAPI.Controllers
             var response=_notesBusinessLayer.CreateNote(item);
             return Ok(response);
         }
+
+        [HttpGet]
+        [Route("GetNotes")]
+        public IActionResult getNotes()
+        {
+            var response = _notesBusinessLayer.getNotes();
+            return Ok(response);
+        }
+
     }
 }

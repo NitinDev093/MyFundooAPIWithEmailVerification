@@ -35,13 +35,26 @@ namespace RepositoryLayer.RepositoryLayer
                 cmd.Parameters.AddWithValue("@Collaborators", collaboratorString);
                 var labelString = string.Join(",", item.Labels);
                 cmd.Parameters.AddWithValue("@Labels", labelString);
-
+                //end
                 cmd.Parameters.AddWithValue("@Reminder", item.Reminder);
                 cmd.Parameters.AddWithValue("@Color", item.Color);
+                cmd.Parameters.AddWithValue("@Image", item.Image);
                 cmd.Parameters.AddWithValue("@IsPinned", item.IsPinned);
                 cmd.Parameters.AddWithValue("@IsArchived", item.IsArchived);
                 cmd.Parameters.AddWithValue("@IsDeleted", item.IsDeleted);
                 sqlcon.Open();
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                sda.Fill(dt);
+                return dt;
+            }
+        }
+
+        public DataTable getNotes()
+        {
+            using (SqlConnection sqlcon=new SqlConnection(_connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("usp_getNotes",sqlcon);
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter(cmd);
                 sda.Fill(dt);

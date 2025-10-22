@@ -14,8 +14,10 @@ namespace CommonLayer.RequestModel
             public List<string>? Labels { get; set; }
             public string? Reminder { get; set; }
             public string? Color { get; set; }
+            public string? Image { get; set; }
             public int IsPinned { get; set; }
             public int IsArchived { get; set; }
             public int IsDeleted { get; set; }
     }
+
 }

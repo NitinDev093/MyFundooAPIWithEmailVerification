@@ -11,5 +11,6 @@ namespace RepositoryLayer.IRepositoryLayer
     public interface INotesRepositoryLayer
     {
         DataTable CreateNote(NotesRequestModel item);
+        DataTable getNotes();
     }
 }

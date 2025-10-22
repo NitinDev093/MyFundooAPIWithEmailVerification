@@ -11,5 +11,6 @@ namespace BusinessLayer.IBusinesslayer
     public interface INotesBusinsessLayer
     {
         ApiResponseModel<List<NotesResponseModel>> CreateNote(NotesRequestModel item);
+        ApiResponseModel<List<NotesResponseModel>> getNotes();
     }
 }

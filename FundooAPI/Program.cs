@@ -1,10 +1,18 @@
-using BusinessLayer.BusinessLayer;
+﻿using BusinessLayer.BusinessLayer;
 using BusinessLayer.IBusinesslayer;
+using Microsoft.OpenApi.Models;
 using RepositoryLayer.IRepositoryLayer;
 using RepositoryLayer.RepositoryLayer;
 using UtilityLayer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+//My Activity
+var jwtSection = builder.Configuration.GetSection("JwtSettings");
+string secretKey = jwtSection["SecretKey"];
+//End
 
 // Add services to the container.
 
@@ -22,15 +30,52 @@ builder.Services.AddScoped<INotesRepositoryLayer, NotesRepositoryLayer>();
 builder.Services.AddScoped<INotesBusinsessLayer, NotesBusinessLayer>();
 builder.Services.AddSingleton<EmailHelper>();
 builder.Services.AddSingleton<JwtHelper>();
-builder.Services.AddCors(options =>
+builder.Services.AddCors(options =>//Enabling Cors
 {
     options.AddPolicy("AllowAllOrigins", builder =>
     {
         builder
-            .WithOrigins("http://localhost:4200")   // ya specific origin: .WithOrigins("https://example.com")
-            .AllowAnyMethod()   // GET, POST, PUT, DELETE, etc.
-            .AllowAnyHeader();  // allow headers
+            .WithOrigins("http://localhost:4200")//This is angular frontent URL
+            .AllowAnyMethod()   
+            .AllowAnyHeader(); 
     });
+});
+// 🔹 Swagger with JWT Authorization
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My Fundoo API", Version = "v1" });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter 'Bearer' [space] and then your token below."
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+            },
+            new string[] {}
+        }
+    });
+});
+// 🔹 JWT Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+    };
 });
 //My Activatity End===========================
 
@@ -45,8 +90,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+//My Activity
 app.UseCors("AllowAllOrigins");
-
+app.UseAuthentication();
+//end
 app.UseAuthorization();
 
 app.MapControllers();

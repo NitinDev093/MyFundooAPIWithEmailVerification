@@ -39,5 +39,25 @@ namespace BusinessLayer.BusinessLayer
             }
             return response;
         }
+
+        public ApiResponseModel<List<NotesResponseModel>> getNotes()
+        {
+            ApiResponseModel<List<NotesResponseModel>> response = new ApiResponseModel<List<NotesResponseModel>>();
+            DataTable NotesData = _notesRepositoryLayer.getNotes();
+            List<NotesResponseModel> noteList = new List<NotesResponseModel>();
+            if (NotesData!=null && NotesData.Rows.Count>0)
+            {
+                string notesData = JsonConvert.SerializeObject(NotesData);
+                noteList = JsonConvert.DeserializeObject<List<NotesResponseModel>>(notesData);
+                response.isSuccess = true;
+                response.Data = noteList;
+            }
+            else
+            {
+                response.isSuccess = false;
+                response.message = "Unable to create notes";
+            }
+            return response;
+        }
     }
 }

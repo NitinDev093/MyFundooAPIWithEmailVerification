@@ -106,15 +106,15 @@ namespace BusinessLayer.BusinessLayer
             return response;
         }
 
-        public ApiResponseModel<bool> CheckEmailExistance(string email)
+        public ApiResponseModel<dynamic> CheckEmailExistance(string email)
         {
-            ApiResponseModel<bool> response=new ApiResponseModel<bool>();
+            ApiResponseModel<dynamic> response=new ApiResponseModel<dynamic>();
             DataTable status = _userRepositoryLayer.CheckEmailExistance(email);
             if (status.Rows.Count>0)
             {
                 bool isSuccess = Convert.ToBoolean(status.Rows[0]["isExists"]);
                 response.isSuccess = true;
-                response.Data = isSuccess;
+                response.Data = new { isExists = isSuccess };
                 response.message = "";
             }
             return response;
