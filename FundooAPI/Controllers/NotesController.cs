@@ -34,5 +34,13 @@ namespace FundooAPI.Controllers
             return Ok(response);
         }
 
+        [HttpPost]
+        [Route("HandleAllNotesAction")]
+        public IActionResult HandleAllNotesAction(int NoteId,string Action)
+        {
+            var response = _notesBusinessLayer.HandleAllNotesAction(NoteId,Action);
+            return Ok(response);
+        }
+
     }
 }

@@ -61,5 +61,19 @@ namespace RepositoryLayer.RepositoryLayer
                 return dt;
             }
         }
+
+        public bool HandleAllNotesAction(int NoteId, string Action)
+        {
+            using (SqlConnection sqlcon=new SqlConnection(_connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("usp_HandleNoteAction", sqlcon);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@NoteId", NoteId);
+                cmd.Parameters.AddWithValue("@Action", Action);
+                sqlcon.Open();
+                int status = cmd.ExecuteNonQuery();
+                return Convert.ToBoolean(status);
+            }
+        }
     }
 }

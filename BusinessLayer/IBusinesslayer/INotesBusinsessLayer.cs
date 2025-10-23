@@ -12,5 +12,6 @@ namespace BusinessLayer.IBusinesslayer
     {
         ApiResponseModel<List<NotesResponseModel>> CreateNote(NotesRequestModel item);
         ApiResponseModel<List<NotesResponseModel>> getNotes();
+        ApiResponseModel<string> HandleAllNotesAction(int NoteId, string Action);
     }
 }

@@ -12,5 +12,6 @@ namespace RepositoryLayer.IRepositoryLayer
     {
         DataTable CreateNote(NotesRequestModel item);
         DataTable getNotes();
+        bool HandleAllNotesAction(int NoteId, string Action);
     }
 }

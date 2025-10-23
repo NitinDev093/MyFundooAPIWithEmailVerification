@@ -3,12 +3,7 @@ using CommonLayer.RequestModel;
 using CommonLayer.ResponseModel;
 using Newtonsoft.Json;
 using RepositoryLayer.IRepositoryLayer;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BusinessLayer.BusinessLayer
 {
@@ -56,6 +51,23 @@ namespace BusinessLayer.BusinessLayer
             {
                 response.isSuccess = false;
                 response.message = "Unable to create notes";
+            }
+            return response;
+        }
+
+        public ApiResponseModel<string> HandleAllNotesAction(int NoteId, string Action)
+        {
+            ApiResponseModel<string> response = new ApiResponseModel<string>();
+            bool result = _notesRepositoryLayer.HandleAllNotesAction(NoteId, Action);
+            if (result)
+            {
+                response.isSuccess = true;
+                response.message = "Action performed successfully";
+            }
+            else
+            {
+                response.isSuccess = false;
+                response.message = "Unable to perform action";
             }
             return response;
         }
