@@ -66,7 +66,8 @@ namespace FundooAPI.Controllers
         [HttpPost]
         public IActionResult ResetPassword(string password)
         {
-            var response = userBusinessLayer.ResetPassword(password);
+            var userId = HttpContext.Items["UserId"];
+            var response = userBusinessLayer.ResetPassword(Convert.ToInt32(userId),password);
             return Ok(response);
         }
 

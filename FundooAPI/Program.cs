@@ -93,9 +93,11 @@ app.UseHttpsRedirection();
 //My Activity
 app.UseCors("AllowAllOrigins");
 app.UseAuthentication();
+app.UseMiddleware<UtilityLayer.JwtMiddleware>();  // always use within UseAuthentication & UseAuthorization
 //end
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.Run();

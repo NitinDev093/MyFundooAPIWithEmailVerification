@@ -151,11 +151,11 @@ namespace BusinessLayer.BusinessLayer
             return response;
         }
 
-        public ApiResponseModel<string> ResetPassword(string newPassword)
+        public ApiResponseModel<string> ResetPassword(int userId,string newPassword)
         {
             ApiResponseModel<string> response=new ApiResponseModel<string>();
             newPassword= EncodeDecodeHelper.EncodeDataToBase64(newPassword);
-            bool updatedPassword = _userRepositoryLayer.ResetPassword(newPassword);
+            bool updatedPassword = _userRepositoryLayer.ResetPassword(userId,newPassword);
             if (updatedPassword)
             {
                 response.isSuccess = true;

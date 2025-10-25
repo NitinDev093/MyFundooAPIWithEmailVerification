@@ -15,6 +15,6 @@ namespace RepositoryLayer.IRepositoryLayer
         DataTable UserLogin(string email,string password);
         DataTable CheckEmailExistance(string email);
         DataTable GetUserByEmailAddress(string email);
-        bool ResetPassword(string newPassword);
+        bool ResetPassword(int userId,string newPassword);
     }
 }

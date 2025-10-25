@@ -1,6 +1,7 @@
 ﻿using CommonLayer.RequestModel;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.IdentityModel.Tokens.Experimental;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -34,9 +35,13 @@ namespace UtilityLayer
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] {
-                new Claim(ClaimTypes.Name, userdata)
+                new Claim(ClaimTypes.Name, userdata),
+                
             }),
+
                 Expires = DateTime.UtcNow.AddMinutes(expiryTime),
+                Issuer = data["ValidIssuer"],
+                Audience = data["ValidAudience"],
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(symmetricKey), SecurityAlgorithms.HmacSha256Signature)
             };
 
