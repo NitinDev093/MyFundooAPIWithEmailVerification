@@ -64,7 +64,8 @@ namespace UtilityLayer
                 string userData = jwtToken.Claims.First(x => x.Type == "unique_name").Value;
                 DataTable userDeserializeObject =  JsonConvert.DeserializeObject<DataTable>(userData);
                 context.Items["UserId"] = userDeserializeObject.Rows[0]["userId"].ToString();
-                
+                //context.Items["Email"] = userDeserializeObject.Rows[0]["Email"].ToString();
+                //we can add more items if needed
             }
             catch
             {

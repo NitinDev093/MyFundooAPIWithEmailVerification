@@ -1,20 +1,9 @@
 ﻿using BusinessLayer.IBusinesslayer;
 using CommonLayer.RequestModel;
 using CommonLayer.ResponseModel;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using RepositoryLayer.IRepositoryLayer;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using UtilityLayer;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace BusinessLayer.BusinessLayer
 {
