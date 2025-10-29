@@ -1,12 +1,12 @@
 ﻿using BusinessLayer.BusinessLayer;
 using BusinessLayer.IBusinesslayer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RepositoryLayer.IRepositoryLayer;
 using RepositoryLayer.RepositoryLayer;
-using UtilityLayer;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using UtilityLayer;
 
 var builder = WebApplication.CreateBuilder(args);
 //My Activity
